@@ -8,6 +8,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * An example showing how to send HTTP GET and read the response from the server
@@ -61,7 +63,8 @@ public class GETExample {
                 String responseBody = convertStreamToString(stream);
                 stream.close();
                 System.out.println("Response from the server:");
-                System.out.println(responseBody);
+                parseJSON(responseBody);
+                //System.out.println(responseBody);
             } else {
                 String responseDescription = con.getResponseMessage();
                 System.out.println("Request failed, response code: " + responseCode + " (" + responseDescription + ")");
@@ -72,6 +75,31 @@ public class GETExample {
             System.out.println("Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    private void parseJSON(String jsonObjString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonObjString);
+            if(jsonObject.has("a")) {
+                int aNum = jsonObject.getInt("a");
+                System.out.println("The object contains field 'a' with value "
+                + aNum);
+            } 
+            if(jsonObject.has("b")) {
+                int bNum = jsonObject.getInt("b");
+                System.out.println("The object contains field 'b' with value "
+                + bNum);
+            }
+            if(jsonObject.has("c")) {
+                int cNum = jsonObject.getInt("c");
+                System.out.println("The object contains field 'c' with value "
+                + cNum);
+            }
+            
+        } catch (JSONException e){
+            System.out.println("Got exception in JSON parsing: " + e.getMessage());
+        }
+        System.out.println("");
     }
 
     /**
